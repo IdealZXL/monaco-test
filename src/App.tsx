@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import type * as Monaco from "monaco-editor";
+import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { configureMonaco, monaco } from "./monaco/configureMonaco";
 import { updateCSharpDiagnostics } from "./monaco/csharpLanguage";
 import {

@@ -1,4 +1,4 @@
-import type * as Monaco from "monaco-editor";
+import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
 
 const languageId = "csharp";
 
