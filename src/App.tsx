@@ -252,6 +252,11 @@ function MonacoCSharpEditor({
       glyphMargin: true,
       renderLineHighlight: "all",
       scrollBeyondLastLine: false,
+      hover: {
+        enabled: true,
+        delay: 120,
+        sticky: true
+      },
       suggest: {
         showSnippets: true,
         showWords: true
@@ -309,6 +314,16 @@ function MonacoCSharpEditor({
 
         const variables = debugVariablesRef.current;
         if (!Object.prototype.hasOwnProperty.call(variables, word.word)) {
+          if (getDeclaredVariableNames(hoverModel.getValue()).has(word.word)) {
+            return {
+              range: new monacoInstance.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+              contents: [
+                { value: `**变量 ${word.word}**` },
+                { value: "当前暂无调试值。请先点击 **运行** 或 **单步**，执行到变量声明之后再悬停查看。" }
+              ]
+            };
+          }
+
           return null;
         }
 
@@ -403,6 +418,29 @@ function formatDebugHoverValue(value: RuntimeValue): string {
   }
 
   return String(value);
+}
+
+function getDeclaredVariableNames(code: string): Set<string> {
+  const variables = new Set<string>();
+  const variablePattern =
+    /\b(?:var|bool|byte|char|decimal|double|float|int|long|string|DateTime|Guid)\s+([A-Za-z_]\w*)\b/g;
+  const parameterPattern = /\(([^)]*)\)/g;
+
+  for (const match of code.matchAll(variablePattern)) {
+    variables.add(match[1]);
+  }
+
+  for (const match of code.matchAll(parameterPattern)) {
+    const parameters = match[1].split(",");
+    for (const parameter of parameters) {
+      const parameterName = parameter.trim().match(/\b([A-Za-z_]\w*)\s*(?:=.*)?$/)?.[1];
+      if (parameterName && !["if", "for", "foreach", "while", "switch", "catch"].includes(parameterName)) {
+        variables.add(parameterName);
+      }
+    }
+  }
+
+  return variables;
 }
 
 export default App;
