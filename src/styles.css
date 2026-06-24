@@ -1,0 +1,305 @@
+:root {
+  color: #eef2ff;
+  background: #0b1020;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 14px;
+  transition:
+    background 0.16s ease,
+    transform 0.16s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.secondaryButton {
+  background: rgba(148, 163, 184, 0.16);
+  color: #dbeafe;
+}
+
+.secondaryButton:hover {
+  background: rgba(148, 163, 184, 0.28);
+}
+
+.appShell {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.hero {
+  align-items: flex-end;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.28), transparent 32rem),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.86));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding: 28px;
+}
+
+.hero h1,
+.cardHeader h2,
+.debugSection h3 {
+  margin: 0;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 4rem);
+  letter-spacing: -0.04em;
+}
+
+.hero p {
+  color: #bac7db;
+  line-height: 1.7;
+  margin: 12px 0 0;
+  max-width: 780px;
+}
+
+.eyebrow {
+  color: #93c5fd;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.heroStats {
+  display: grid;
+  gap: 8px;
+  min-width: 160px;
+}
+
+.heroStats span {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  color: #dbeafe;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.workspaceGrid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) 380px;
+}
+
+.editorCard,
+.debugPanel {
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.debugPanel {
+  padding: 18px;
+}
+
+.cardHeader {
+  align-items: center;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 70px;
+  padding: 16px 18px;
+}
+
+.cardHeader h2 {
+  font-size: 1rem;
+}
+
+.cardHeader span {
+  color: #94a3b8;
+  display: inline-block;
+  font-size: 0.86rem;
+  margin-top: 4px;
+}
+
+.editorHost {
+  height: 68vh;
+  min-height: 560px;
+}
+
+.toolbar {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 18px 0;
+}
+
+.debugSection {
+  background: rgba(2, 6, 23, 0.46);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 16px;
+  margin-top: 14px;
+  padding: 14px;
+}
+
+.debugSection h3 {
+  color: #bfdbfe;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.emptyState {
+  color: #64748b;
+  margin: 0;
+}
+
+.lineList {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lineList li {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.84);
+  border-radius: 10px;
+  color: #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+}
+
+.lineList span {
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+
+.variableList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.variableList div {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.84);
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 8px 10px;
+}
+
+.variableList dt {
+  color: #a7f3d0;
+  font-weight: 700;
+}
+
+.variableList dd {
+  color: #f8fafc;
+  margin: 0;
+}
+
+.consoleOutput {
+  background: #020617;
+  border-radius: 12px;
+  color: #d1fae5;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  margin: 0;
+  min-height: 90px;
+  overflow: auto;
+  padding: 12px;
+  white-space: pre-wrap;
+}
+
+.breakpointGlyph {
+  position: relative;
+}
+
+.breakpointGlyph::before {
+  background: #ef4444;
+  border: 2px solid #fecaca;
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: 11px;
+  margin-left: 4px;
+  margin-top: 5px;
+  width: 11px;
+}
+
+.currentLineGlyph::before {
+  color: #fbbf24;
+  content: "▶";
+  display: block;
+  font-size: 13px;
+  line-height: 22px;
+  margin-left: 4px;
+}
+
+.debugCurrentLine {
+  background: rgba(245, 158, 11, 0.18);
+}
+
+@media (max-width: 1100px) {
+  .workspaceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .debugPanel {
+    order: -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .appShell {
+    padding: 16px;
+  }
+
+  .hero,
+  .cardHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .heroStats {
+    width: 100%;
+  }
+
+  .editorHost {
+    min-height: 460px;
+  }
+}
