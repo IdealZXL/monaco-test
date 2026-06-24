@@ -5,12 +5,13 @@ import { configureMonaco, monaco } from "./monaco/configureMonaco";
 import { updateCSharpDiagnostics } from "./monaco/csharpLanguage";
 import {
   continueDebugSession,
-  DebugState,
   emptyDebugState,
   pauseAtEntryDebugSession,
   startDebugSession,
   stepOverDebugSession,
-  stopDebugSession
+  stopDebugSession,
+  type DebugState,
+  type RuntimeValue
 } from "./debug/csharpDebugEngine";
 
 const initialCode = `using System;
@@ -102,7 +103,7 @@ function App() {
           <div className="cardHeader">
             <div>
               <h2>Editor.cs</h2>
-              <span>Ctrl / Cmd + Space 触发补全，点击行号栏添加断点</span>
+              <span>Ctrl / Cmd + Space 触发补全，点击行号栏添加断点，悬停变量查看当前值</span>
             </div>
             <button type="button" className="secondaryButton" onClick={() => setCode(initialCode)}>
               重置示例
@@ -112,6 +113,7 @@ function App() {
             code={code}
             breakpoints={breakpoints}
             currentLine={debugState.currentLine}
+            debugVariables={debugState.variables}
             onChange={setCode}
             onToggleBreakpoint={toggleBreakpoint}
             onMarkerCountChange={setMarkerCount}
@@ -197,6 +199,7 @@ interface MonacoCSharpEditorProps {
   code: string;
   breakpoints: Set<number>;
   currentLine: number | null;
+  debugVariables: Record<string, RuntimeValue>;
   onChange(value: string): void;
   onToggleBreakpoint(lineNumber: number): void;
   onMarkerCountChange(count: number): void;
@@ -206,6 +209,7 @@ function MonacoCSharpEditor({
   code,
   breakpoints,
   currentLine,
+  debugVariables,
   onChange,
   onToggleBreakpoint,
   onMarkerCountChange
@@ -218,12 +222,14 @@ function MonacoCSharpEditor({
   const onChangeRef = useRef(onChange);
   const onToggleBreakpointRef = useRef(onToggleBreakpoint);
   const onMarkerCountChangeRef = useRef(onMarkerCountChange);
+  const debugVariablesRef = useRef(debugVariables);
 
   useEffect(() => {
     onChangeRef.current = onChange;
     onToggleBreakpointRef.current = onToggleBreakpoint;
     onMarkerCountChangeRef.current = onMarkerCountChange;
-  }, [onChange, onMarkerCountChange, onToggleBreakpoint]);
+    debugVariablesRef.current = debugVariables;
+  }, [debugVariables, onChange, onMarkerCountChange, onToggleBreakpoint]);
 
   useEffect(() => {
     const host = containerRef.current;
@@ -290,10 +296,36 @@ function MonacoCSharpEditor({
         onToggleBreakpointRef.current(event.target.position.lineNumber);
       }
     });
+    const hoverProvider = monacoInstance.languages.registerHoverProvider("csharp", {
+      provideHover(hoverModel, position) {
+        if (hoverModel !== modelRef.current) {
+          return null;
+        }
+
+        const word = hoverModel.getWordAtPosition(position);
+        if (!word) {
+          return null;
+        }
+
+        const variables = debugVariablesRef.current;
+        if (!Object.prototype.hasOwnProperty.call(variables, word.word)) {
+          return null;
+        }
+
+        return {
+          range: new monacoInstance.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+          contents: [
+            { value: `**变量 ${word.word}**` },
+            { value: `当前值: \`${formatDebugHoverValue(variables[word.word])}\`` }
+          ]
+        };
+      }
+    });
 
     return () => {
       contentSubscription.dispose();
       mouseSubscription.dispose();
+      hoverProvider.dispose();
       breakpointDecorationsRef.current?.clear();
       currentLineDecorationsRef.current?.clear();
       editor.dispose();
@@ -363,6 +395,14 @@ function DebugSection({ title, children }: { title: string; children: ReactNode 
       {children}
     </section>
   );
+}
+
+function formatDebugHoverValue(value: RuntimeValue): string {
+  if (typeof value === "string") {
+    return JSON.stringify(value);
+  }
+
+  return String(value);
 }
 
 export default App;
